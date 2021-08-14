@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Text from "components/Text";
 import UserList from "components/UserList";
 import { usePeopleFetch } from "hooks";
@@ -32,7 +32,7 @@ const Home = () => {
       checked: false
     }
   ]);
-
+  const [favorites, setFavorites] = useState([]);
   const { users, isLoading } = usePeopleFetch({ countries });
 
   const handleChecked = (val) => {
@@ -44,6 +44,26 @@ const Home = () => {
       }
     })
     setCountries([...newCountries])
+  }
+
+  useEffect(() => {
+    const data = localStorage.getItem('Favorites')
+    setFavorites(JSON.parse(data) || [])
+  }, [])
+
+
+
+  useEffect(() => {
+    localStorage.setItem('Favorites', JSON.stringify(favorites))
+  }, [favorites])
+
+  const handleFavorites = (user) => {
+    const id = user.login.uuid
+    if (favorites.find(fav => fav.login.uuid === id)) {
+      setFavorites(pre => pre.filter(fav => fav.login.uuid !== id))
+    } else {
+      setFavorites(pre => [...pre, user])
+    }
   }
 
   return (
@@ -59,6 +79,8 @@ const Home = () => {
           isLoading={isLoading}
           countries={countries}
           handleChange={handleChecked}
+          handleFavorites={handleFavorites}
+          favorites={favorites}
         />
       </S.Content>
     </S.Home>

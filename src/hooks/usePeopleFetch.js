@@ -11,7 +11,7 @@ export const usePeopleFetch = ({ countries }) => {
 
   async function fetchUsers(countries) {
     setIsLoading(true);
-    const filterBy = countries.reduce((acc, val, index, arr) => {
+    const filterBy = countries.reduce((acc, val) => {
       if (val.checked) {
         acc = acc + val.value + ','
       }
