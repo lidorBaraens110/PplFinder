@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef, useCallback } from "react";
 import Text from "components/Text";
 import UserList from "components/UserList";
 import { usePeopleFetch } from "hooks";
@@ -33,7 +33,21 @@ const Home = () => {
     }
   ]);
   const [favorites, setFavorites] = useState([]);
-  const { users, isLoading } = usePeopleFetch({ countries });
+  const [pageNumber, setPageNumber] = useState(1);
+
+  const { users, isLoading } = usePeopleFetch({ countries, pageNumber });
+
+  const observer = useRef();
+  const lastIndexRef = useCallback(node => {
+    if (isLoading) return
+    if (observer.current) observer.current.disconnect();
+    observer.current = new IntersectionObserver(entires => {
+      if (entires[0].isIntersecting) {
+        setPageNumber(pre => pre + 1)
+      }
+    })
+    if (node) observer.current.observe(node)
+  }, [isLoading])
 
   const handleChecked = (val) => {
     const newCountries = countries.map(country => {
@@ -70,11 +84,13 @@ const Home = () => {
     <S.Home>
       <S.Content>
         <S.Header>
+          <button onClick={() => setPageNumber(pre => pre + 1)}>{pageNumber}</button>
           <Text size="64px" bold>
             PplFinder
           </Text>
         </S.Header>
         <UserList
+          lastIndexRef={lastIndexRef}
           users={users}
           isLoading={isLoading}
           countries={countries}

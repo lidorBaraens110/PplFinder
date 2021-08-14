@@ -1,15 +1,18 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
 
-export const usePeopleFetch = ({ countries }) => {
+export const usePeopleFetch = ({ countries, pageNumber }) => {
   const [users, setUsers] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
-    fetchUsers(countries);
-  }, [countries]);
+    fetchUsers();
+  }, [countries, pageNumber]);
+  useEffect(() => {
+    setUsers([])
+  }, [countries])
 
-  async function fetchUsers(countries) {
+  async function fetchUsers() {
     setIsLoading(true);
     const filterBy = countries.reduce((acc, val) => {
       if (val.checked) {
@@ -17,9 +20,10 @@ export const usePeopleFetch = ({ countries }) => {
       }
       return acc
     }, '')
-    const response = await axios.get(`https://randomuser.me/api/?results=5&page=1&nat=${filterBy}`);
+
+    const response = await axios.get(`https://randomuser.me/api/?results=25&page=${pageNumber}&nat=${filterBy}`);
+    setUsers(pre => [...pre, ...response.data.results]);
     setIsLoading(false);
-    setUsers(response.data.results);
   }
 
   return { users, isLoading, fetchUsers };
