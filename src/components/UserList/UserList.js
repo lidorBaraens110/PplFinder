@@ -25,16 +25,18 @@ const UserList = ({ users,
 
   return (
     <S.UserList>
-      <S.Filters>
-        {countries.map((country, i) => {
-          return <CheckBox
-            key={i}
-            value={country.value}
-            isChecked={country.checked}
-            onChange={handleChange}
-            label={country.name} />
-        })}
-      </S.Filters>
+      {countries &&
+        <S.Filters>
+          {countries.map((country, i) => {
+            return <CheckBox
+              key={i}
+              value={country.value}
+              isChecked={country.checked}
+              onChange={handleChange}
+              label={country.name} />
+          })}
+        </S.Filters>
+      }
       <S.List>
         {users.map((user, index) => {
           return (
