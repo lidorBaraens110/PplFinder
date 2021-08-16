@@ -62,7 +62,6 @@ const UserModal = () => {
                         <br />
                         email: {userContent.email}
                     </Text>
-
                     <Text size='1.2rem' bold>
                         Location:
                     </Text>
@@ -71,7 +70,6 @@ const UserModal = () => {
                         <br />
                         {userContent.location?.street.name} {userContent.location?.street.number}
                     </Text>
-
                     <Text>
                         registered in {moment(userContent.registered?.date).format("MM/DD/YYYY")}
                     </Text>

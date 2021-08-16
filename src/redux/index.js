@@ -4,7 +4,7 @@ import favoritesReducer from './reducers/favoritesReducer';
 
 
 const initialState = {
-    favorites: JSON.parse(localStorage.getItem('Favorites'))
+    favorites: JSON.parse(localStorage.getItem('Favorites')) || []
 }
 
 const reducers = combineReducers({
