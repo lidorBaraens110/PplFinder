@@ -1,0 +1,4 @@
+export const OPEN_MODAL = "OPEN_MODAL"
+export const CLOSE_MODAL = "CLOSE_MODAL"
+export const INSERT_CONTENT = "INSERT_CONTENT"
+export const HANDLE_FAVORITES = "HANDLE_FAVORITES"

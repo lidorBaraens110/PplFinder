@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef, useCallback } from "react";
 import Text from "components/Text";
 import UserList from "components/UserList";
-import { usePeopleFetch } from "hooks";
+import { usePeopleFetch, useFavorites } from "hooks";
 import * as S from "./style";
 
 const Home = () => {
@@ -32,12 +32,15 @@ const Home = () => {
       checked: false
     }
   ]);
-  const [favorites, setFavorites] = useState([]);
+
+  const { favorites, handleFavorites } = useFavorites()
+  // const [favorites, setFavorites] = useState([]);
   const [pageNumber, setPageNumber] = useState(1);
 
   const { users, isLoading } = usePeopleFetch({ countries, pageNumber });
 
   const observer = useRef();
+
   const lastIndexRef = useCallback(node => {
     if (isLoading) return
     if (observer.current) observer.current.disconnect();
@@ -60,31 +63,10 @@ const Home = () => {
     setCountries([...newCountries])
   }
 
-  useEffect(() => {
-    const data = localStorage.getItem('Favorites')
-    setFavorites(JSON.parse(data) || [])
-  }, [])
-
-
-
-  useEffect(() => {
-    localStorage.setItem('Favorites', JSON.stringify(favorites))
-  }, [favorites])
-
-  const handleFavorites = (user) => {
-    const id = user.login.uuid
-    if (favorites.find(fav => fav.login.uuid === id)) {
-      setFavorites(pre => pre.filter(fav => fav.login.uuid !== id))
-    } else {
-      setFavorites(pre => [...pre, user])
-    }
-  }
-
   return (
     <S.Home>
       <S.Content>
         <S.Header>
-          <button onClick={() => setPageNumber(pre => pre + 1)}>{pageNumber}</button>
           <Text size="64px" bold>
             PplFinder
           </Text>
@@ -97,6 +79,7 @@ const Home = () => {
           handleChange={handleChecked}
           handleFavorites={handleFavorites}
           favorites={favorites}
+
         />
       </S.Content>
     </S.Home>
